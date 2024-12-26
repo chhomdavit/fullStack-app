@@ -40,12 +40,8 @@ public class PaymentHandlerService {
 
         if(Constant.CASH.equalsIgnoreCase(paymentRequest.getPaymentMethod())) {
             log.info("Payment method is cash");
-            // call cash api
             String cashServerResponse = cashHandlerService.postingToCashApi(paymentRequest);
-
             savePaymentTransaction(paymentRequest, cashServerResponse);
-
-            // verify the response make sure it success or fail
             if(StringUtils.hasText(cashServerResponse)){
                 return Constant.SUCCESS;
             }
@@ -53,10 +49,8 @@ public class PaymentHandlerService {
         }
 
         if(Constant.CARD.equalsIgnoreCase(paymentRequest.getPaymentMethod())) {
-            log.info("Payment method is card");
             return Constant.SUCCESS;
         }
-
         log.info("Payment method is not supported");
         return Constant.FAILED;
     }

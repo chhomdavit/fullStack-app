@@ -1,5 +1,6 @@
 package com.web.backend_byspring.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.web.backend_byspring.enumeration.Roles;
 import lombok.*;
@@ -12,6 +13,7 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class CustomerRespones {
 
     private Long id;
