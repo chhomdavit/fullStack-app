@@ -1,9 +1,20 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import { Avatar } from "antd";
+import { request } from "../util/apiUtil";
 
-const employee = JSON.parse(localStorage.getItem("response_data")) 
 
 const Profile = () => {
+    const [profile, setProfile] = useState([]);
+    useEffect(() => {
+        getProfile();
+    }, []);
+
+    const getProfile = async () => {
+        const res = await request('GET', 'employee/get-profile');
+        if (res.status === 200) {
+            setProfile(res.data.response_data);
+        }
+    };
   return (
     <div
             style={{
@@ -54,7 +65,7 @@ const Profile = () => {
                             fontSize: "40px",
                         }}
                     >
-                        {employee.full_name.charAt(0).toUpperCase()}
+                        {profile.full_name ? profile.full_name.charAt(0).toUpperCase() : "?"}
                     </Avatar>
                 </div>
             </div>
@@ -67,8 +78,10 @@ const Profile = () => {
                     color: "#1c1e21",
                 }}
             >
-                <h1 style={{ fontSize: "24px", margin: "10px 0" }}>{employee.full_name}</h1>
-                <p style={{ fontSize: "16px", color: "#606770" }}>{employee.email}</p>
+                <h1 style={{ fontSize: "24px", margin: "10px 0" }}>{profile.full_name}</h1>
+                <p style={{ fontSize: "16px", color: "#606770" }}>{profile.id}</p>
+                <p style={{ fontSize: "16px", color: "#606770" }}>{profile.email}</p>
+                <p style={{ fontSize: "16px", color: "#606770" }}>{profile.address}</p>
             </div>
         </div>
   )

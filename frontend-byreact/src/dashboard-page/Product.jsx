@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react"
 import { request, Config } from "../util/apiUtil";
 import { formatDateForClient } from "../util/serviceUtil";
+import  JsbarcodeUtil  from "../util/jsbarcodeUtil";
 import { Button, Image, Modal, Table, Form, Divider, Input, Row, Col, Upload, Space, Popconfirm, Pagination, AutoComplete, message, Select, InputNumber, Menu } from "antd";
 import { DeleteFilled, EditFilled, EyeOutlined, PlusOutlined } from '@ant-design/icons';
 
@@ -8,21 +9,16 @@ function Product() {
 
   const [product, setProduct] = useState([]);
   const [category, setCategory] = useState([]);
+  const [profile, setProfile] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("");
   const [form] = Form.useForm();
   const [items, setItems] = useState(null)
   const [suggestions, setSuggestions] = useState([]);
-  const [pagination, setPagination] = useState({ current: 1, pageSize: 3, total: 0 });
+  const [pagination, setPagination] = useState({ current: 1, pageSize: 5, total: 0 });
   const [searchKeyword, setSearchKeyword] = useState("");
   const [viewDescription, setViewDescription] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDescriptionModalOpen, setIsDescriptionModalOpen] = useState(false);
-
-
-  // const onClickViewContent = (item) => {
-  //   setViewDescription(item.description);
-  //   setIsDescriptionModalOpen(true);
-  // };
 
   const onClickViewContent = (item) => {
     const content =
@@ -42,6 +38,7 @@ function Product() {
   useEffect(() => {
     getProduct();
     getCategory();
+    getProfile();
   }, [pagination.current, searchKeyword, selectedCategory]);
 
   const productColumns = [
@@ -64,8 +61,12 @@ function Product() {
         </Button>
       ),
     },
-    { title: "Barcode", dataIndex: "barcode", key: "barcode" },
+    {
+      title: "Barcode", dataIndex: "barcode", key: "barcode", width: "150px",
+      render: (_, item) => <JsbarcodeUtil barcode={item.barcode} />  // Render barcode here
+    },
     { title: "CreateBy", dataIndex: ["created_by", "full_name"], key: "full_name" },
+    { title: "UpdateBy", dataIndex: ["updated_by", "full_name"], key: "full_name", render: (updatedBy) => updatedBy ? updatedBy : "N/A" },
     { title: "Category", dataIndex: ["category", "name"], key: "name" },
     {
       title: "Price", dataIndex: "price", key: "price",
@@ -141,6 +142,14 @@ function Product() {
     })
   }
 
+  const getProfile = async () => {
+    const res = await request('GET', 'employee/get-profile');
+    console.log(res)
+    if (res.status === 200) {
+      setProfile(res.data.response_data);
+    }
+  };
+
   const getProduct = () => {
     const { current, pageSize } = pagination;
     const categoryFilter = selectedCategory ? `&categoryId=${selectedCategory}` : "";
@@ -190,6 +199,8 @@ function Product() {
 
     var formData = new FormData();
     Object.keys(item).forEach((key) => formData.append(key, item[key]));
+    formData.append("created_by", profile.id);
+    formData.append("updated_by", profile.id);
     if (fileList.length > 0) {
       formData.append("file", fileList[0].originFileObj);
     }
@@ -207,13 +218,16 @@ function Product() {
     setIsModalOpen(true);
     setItems(item)
     const categoryId = item.category ? item.category.id : undefined;
-    console.log(categoryId)
+    const createdBy = item.created_by ? item.created_by.id : undefined;
+    const updatedBy = item.updated_by ? item.updated_by.id : undefined;
     form.setFieldsValue({
       name: item.name,
       description: item.description,
       product_quantity: item.product_quantity,
       price: item.price,
-      category_id: categoryId
+      category_id: categoryId,
+      created_by: createdBy,
+      updated_by: updatedBy,
     });
     setFileList([
       {
@@ -294,7 +308,7 @@ function Product() {
         >
           <Divider style={{ margin: "5px" }} />
           <Form.Item label="Name" name={"name"}>
-            <Input placeholder="Enter title name" />
+            <Input.TextArea placeholder="Enter title name" />
           </Form.Item>
 
           <Row gutter={[24, 24]}>
@@ -314,12 +328,12 @@ function Product() {
           <Row gutter={[24, 24]}>
             <Col span={12}>
               <Row gutter={[24, 24]}>
-                <Form.Item label="Price" name={"price"}>
+                <Form.Item style={{width:'100%'}} label="Price" name={"price"}>
                   <Input placeholder="Enter Price" />
                 </Form.Item>
               </Row>
               <Row gutter={[24, 24]}>
-                <Form.Item label="Category" name="category_id">
+                <Form.Item style={{width:'100%'}} label="Category" name="category_id">
                   <Select placeholder="Select Category" allowClear>
                     {category.map((item, index) => (
                       <Select.Option key={index.id} value={item.id}>
@@ -386,6 +400,7 @@ function Product() {
         columns={productColumns}
         scroll={{ x: 1300 }}
         pagination={false}
+        loading={product.length === 0}
         rowKey={(record) => record.id}
       />
       <Pagination
