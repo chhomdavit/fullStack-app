@@ -3,8 +3,8 @@ package com.web.backend_byspring.jwt.Impl;
 
 import com.web.backend_byspring.constant.AppConstants;
 import com.web.backend_byspring.jwt.JWTUtils;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.*;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
@@ -17,6 +17,7 @@ import java.util.HashMap;
 import java.util.function.Function;
 
 @Component
+@Slf4j
 public class JWTUtilsImpl implements JWTUtils {
 	
     private SecretKey Key;
@@ -51,13 +52,29 @@ public class JWTUtilsImpl implements JWTUtils {
 	public String extractUsername(String token) {
 		return extractClaims(token, Claims::getSubject);
 	}
-	
+
 	private <T> T extractClaims(String token, Function<Claims, T> claimsTFunction) {
-        return claimsTFunction.apply(Jwts.parser()
-                .verifyWith(Key)
-                .build()
-                .parseSignedClaims(token)
-                .getPayload());
+        try {
+			return claimsTFunction.apply(
+					Jwts.parser()
+					.verifyWith(Key)
+					.build()
+					.parseSignedClaims(token)
+					.getPayload()
+			);
+		}catch (ExpiredJwtException ex) {
+			log.error(ex.getLocalizedMessage());
+			throw new RuntimeException("Token expiration");
+		}catch (UnsupportedJwtException ex){
+			log.error(ex.getLocalizedMessage());
+			throw new RuntimeException("Token is not support.");
+		}catch (MalformedJwtException ex) {
+			log.error(ex.getLocalizedMessage());
+			throw new RuntimeException("Token is invalid format.");
+		} catch (Exception ex) {
+			log.error(ex.getLocalizedMessage());
+			throw new RuntimeException(ex.getLocalizedMessage());
+		}
     }
 
 	@Override

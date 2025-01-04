@@ -24,4 +24,7 @@ public class PaymentResponse {
 
     @JsonProperty("payment_description")
     private String paymentDescription;
+
+    @JsonProperty("created_by")
+    private String createdBy;
 }

@@ -17,13 +17,13 @@ public class OrderResponse {
 
     private CustomerRespones customer;
 
-    private Double subTotal = 0.0;
+    private Double subTotal;
 
-    private Double bill = 0.0;
+    private Double bill;
 
-    private Double discount = 0.0;
+    private Double discount;
 
-    private Double tax = 0.0;
+    private Double tax;
 
     private PaymentResponse Payment;
 

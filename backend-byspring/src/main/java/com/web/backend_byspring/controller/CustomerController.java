@@ -58,4 +58,9 @@ public class CustomerController {
         return new ResponseEntity<>(ApiResponse.successResponse(customerService.refreshToken(refreshTolenRequest)), HttpStatus.OK);
     }
 
+    @GetMapping(value = "", produces = "application/json")
+    private ResponseEntity<Object> findAll() {
+        return new ResponseEntity<>(customerService.getAll(), HttpStatus.OK);
+    }
+
 }

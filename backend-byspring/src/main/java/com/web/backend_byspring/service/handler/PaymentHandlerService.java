@@ -1,10 +1,14 @@
 package com.web.backend_byspring.service.handler;
 
 import com.web.backend_byspring.constant.Constant;
+import com.web.backend_byspring.dto.CustomerRespones;
 import com.web.backend_byspring.dto.PaymentRequest;
+import com.web.backend_byspring.dto.PaymentResponse;
 import com.web.backend_byspring.enumeration.PaymentMethod;
 import com.web.backend_byspring.enumeration.PaymentStatus;
+import com.web.backend_byspring.model.Customer;
 import com.web.backend_byspring.model.Payment;
+import com.web.backend_byspring.repository.CustomerRepository;
 import com.web.backend_byspring.repository.PaymentRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,6 +23,7 @@ import java.time.LocalDateTime;
 public class PaymentHandlerService {
 
     private final PaymentRepository paymentRepository;
+    private final CustomerRepository customerRepository;
     private final KhQRHandlerService khQRHandlerService;
     private final CashHandlerService cashHandlerService;
 
@@ -72,4 +77,15 @@ public class PaymentHandlerService {
         paymentRepository.save(payment);
     }
 
+    public PaymentResponse convertPaymentToPaymentResponse(Payment payment) {
+
+        return PaymentResponse.builder()
+                .id(payment.getId())
+                .amount(payment.getAmount())
+                .paymentMethod(payment.getPaymentMethod().name())
+                .paymentStatus(payment.getPaymentStatus().name())
+                .paymentDescription(payment.getDescription())
+                .createdBy(payment.getCreatedBy())
+                .build();
+    }
 }

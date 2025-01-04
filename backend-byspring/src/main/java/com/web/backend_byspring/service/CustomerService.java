@@ -5,6 +5,8 @@ import com.web.backend_byspring.dto.CustomerRespones;
 import com.web.backend_byspring.dto.RefreshTolenRequest;
 import com.web.backend_byspring.dto.ResetPasswordRequest;
 
+import java.util.List;
+
 public interface CustomerService {
 
     CustomerRespones create(CustomerRequest customerRequest);
@@ -20,4 +22,6 @@ public interface CustomerService {
     void resetPassword(ResetPasswordRequest resetPasswordRequest);
 
     CustomerRespones refreshToken(RefreshTolenRequest refreshTolenRequest);
+
+    List<CustomerRespones> getAll();
 }

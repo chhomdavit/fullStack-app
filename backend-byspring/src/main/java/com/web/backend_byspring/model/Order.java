@@ -23,13 +23,13 @@ public class Order extends BaseEntity{
 
     private Long PaymentId;
 
-    private Double subTotal = 0.0;
+    private Double subTotal;
 
-    private Double bill = 0.0;
+    private Double bill;
 
-    private Double discount = 0.0;
+    private Double discount;
 
-    private Double tax = 0.0;
+    private Double tax;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "order_status")

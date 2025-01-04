@@ -1,8 +1,6 @@
 package com.web.backend_byspring.service;
 
-import com.web.backend_byspring.dto.EmployeeRequest;
-import com.web.backend_byspring.dto.EmployeeRespones;
-import com.web.backend_byspring.dto.RefreshTolenRequest;
+import com.web.backend_byspring.dto.*;
 
 public interface EmployeeService {
 
@@ -13,4 +11,8 @@ public interface EmployeeService {
     EmployeeRespones login(EmployeeRequest employeeRequest);
 
     EmployeeRespones refreshToken(RefreshTolenRequest refreshTolenRequest);
+
+    EmployeeRespones getMyInfo(EmployeeRequest employeeRequest);
+
+    PaginationResponse<EmployeeRespones> getAllWithPagination(String keyword, int pageNumber, int pageSize);
 }

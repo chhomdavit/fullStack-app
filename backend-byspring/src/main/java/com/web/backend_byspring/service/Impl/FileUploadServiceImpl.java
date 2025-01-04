@@ -2,6 +2,7 @@ package com.web.backend_byspring.service.Impl;
 
 import com.web.backend_byspring.dto.FileRespones;
 import com.web.backend_byspring.service.FileUploadService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -10,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -19,6 +21,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Service
+@RequiredArgsConstructor
 public class FileUploadServiceImpl implements FileUploadService {
 
     @Value("${project.upload}")
@@ -27,16 +30,36 @@ public class FileUploadServiceImpl implements FileUploadService {
     @Value("${base.url}")
     private String baseUrl;
 
+//    @Override
+//    public byte[] getFileName(String fileName) {
+//        try {
+//            Path filename = Paths.get("upload", fileName);
+//            return Files.readAllBytes(filename);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            return null;
+//        }
+//    }
+
     @Override
     public byte[] getFileName(String fileName) {
         try {
             Path filename = Paths.get("upload", fileName);
             return Files.readAllBytes(filename);
+        } catch (NoSuchFileException e) {
+            try {
+                Path defaultFilePath = Paths.get("upload", "https://via.placeholder.com/150");
+                return Files.readAllBytes(defaultFilePath);
+            } catch (IOException ex) {
+                ex.printStackTrace();
+                throw new RuntimeException("Default file is not available", ex);
+            }
         } catch (Exception e) {
             e.printStackTrace();
-            return null;
+            throw new RuntimeException("An unexpected error occurred while retrieving the file", e);
         }
     }
+
 
     @Override
     public List<FileRespones> findAll() {

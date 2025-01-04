@@ -1,7 +1,6 @@
 package com.web.backend_byspring.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.web.backend_byspring.enumeration.PaymentStatus;
 import lombok.Getter;
 import lombok.Setter;
 

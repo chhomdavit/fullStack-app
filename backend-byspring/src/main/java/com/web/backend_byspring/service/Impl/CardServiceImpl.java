@@ -4,9 +4,11 @@ import com.web.backend_byspring.dto.CardRequest;
 import com.web.backend_byspring.dto.CardResponse;
 import com.web.backend_byspring.model.Card;
 import com.web.backend_byspring.model.Customer;
+import com.web.backend_byspring.model.Employee;
 import com.web.backend_byspring.model.Product;
 import com.web.backend_byspring.repository.CardRepository;
 import com.web.backend_byspring.repository.CustomerRepository;
+import com.web.backend_byspring.repository.EmployeeRepository;
 import com.web.backend_byspring.repository.ProductRepository;
 import com.web.backend_byspring.service.handler.CardHandlerService;
 import com.web.backend_byspring.service.CardService;
@@ -24,6 +26,7 @@ public class CardServiceImpl implements CardService {
 
     private final CardRepository cardRepository;
     private final CustomerRepository customerRepository;
+    private final EmployeeRepository employeeRepository;
     private final ProductRepository productRepository;
     private final CardHandlerService cardHandlerService;
 

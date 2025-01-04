@@ -16,13 +16,13 @@ public class OrderRequest {
     @JsonProperty(value = "customer_id")
     private Long customerId;
 
-    private Double subTotal = 0.0;
+    private Double subTotal;
 
-    private Double bill = 0.0;
+    private Double bill;
 
-    private Double discount = 0.0;
+    private Double discount;
 
-    private Double tax = 0.0;
+    private Double tax;
 
     @JsonProperty("payment")
     private PaymentRequest paymentRequest;

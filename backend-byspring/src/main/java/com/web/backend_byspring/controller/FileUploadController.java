@@ -29,12 +29,8 @@ public class FileUploadController {
             if (buffer != null) {
                 ByteArrayResource byteArrayResource = new ByteArrayResource(buffer);
                 final MediaType image_PNG2 = MediaType.IMAGE_PNG;
-                if (image_PNG2 != null) {
-                    return ResponseEntity.ok().contentLength(buffer.length).contentType(image_PNG2)
-                            .body(byteArrayResource);
-                } else {
-                    return null;
-                }
+                return ResponseEntity.ok().contentLength(buffer.length).contentType(image_PNG2)
+                        .body(byteArrayResource);
             }
         }
         return ResponseEntity.badRequest().build();
@@ -48,5 +44,10 @@ public class FileUploadController {
     @PostMapping(value = "/multiple", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public List<FileRespones> uploadMultiple(@RequestPart List<MultipartFile> files) {
         return fileUploadService.uploadMultiple(files, path);
+    }
+
+    @GetMapping("/findAll")
+    public List<FileRespones> findAll() {
+        return fileUploadService.findAll();
     }
 }

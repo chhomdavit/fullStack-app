@@ -3,6 +3,7 @@ package com.web.backend_byspring.service.Impl;
 import com.web.backend_byspring.dto.OrderRequest;
 import com.web.backend_byspring.dto.OrderResponse;
 import com.web.backend_byspring.dto.PaginationResponse;
+import com.web.backend_byspring.enumeration.PaymentStatus;
 import com.web.backend_byspring.exception.InvalidException;
 import com.web.backend_byspring.model.*;
 import com.web.backend_byspring.repository.CardRepository;
@@ -74,26 +75,46 @@ public class OrderServiceImpl implements OrderService {
         order.setCreatedAt(LocalDateTime.now());
 
         Order savedOrder = orderRepository.save(order);
+        cardRepository.deleteAll(cardList);
         return orderHandlerService.convertOrderToOrderResponse(savedOrder);
     }
 
     @Override
     public OrderResponse update(OrderRequest orderRequest, Long id) {
-        Optional<Order> order = orderRepository.findById(id);
-        if(order.isEmpty()) {
+        Optional<Order> orderOptional = orderRepository.findById(id);
+        if (orderOptional.isEmpty()) {
             throw new InvalidException("Order not found.");
         }
-        if (!orderRequest.getCustomerId().equals(order.get().getCustomerId())) {
-            throw new RuntimeException("Customer not authorized to delete this cart");
+        Order order = orderOptional.get();
+        order.setOrderStatus(orderRequest.getOrderStatus());
+        order.setUpdatedAt(LocalDateTime.now());
+        Optional<Payment> paymentOptional = paymentRepository.findById(order.getPaymentId());
+        if (paymentOptional.isPresent()) {
+            Payment payment = paymentOptional.get();
+            switch (orderRequest.getOrderStatus()) {
+                case SUCCESS:
+                    payment.setPaymentStatus(PaymentStatus.SUCCESS);
+                case DELIVERED:
+                    break;
+                case FAILED:
+                    payment.setPaymentStatus(PaymentStatus.FAILED);
+                    break;
+                case PENDING:
+                    payment.setPaymentStatus(PaymentStatus.PENDING);
+                    break;
+                case PREPARING:
+                    break;
+                case OUT_FOR_DELIVERY:
+                    break;
+                default:
+            }
+            payment.setUpdatedAt(LocalDateTime.now());
+            paymentRepository.save(payment);
         }
-        Order updateOrder = order.get();
-            updateOrder.setDiscount(orderRequest.getDiscount());
-            updateOrder.setTax(orderRequest.getTax());
-            updateOrder.setOrderStatus(orderRequest.getOrderStatus());
-            updateOrder.setUpdatedAt(LocalDateTime.now());
-        Order savedOrder = orderRepository.saveAndFlush(updateOrder);
-        return orderHandlerService.convertOrderToOrderResponse(savedOrder);
+        Order updatedOrder = orderRepository.saveAndFlush(order);
+        return orderHandlerService.convertOrderToOrderResponse(updatedOrder);
     }
+
 
     @Override
     public PaginationResponse<OrderResponse> getAllWithPagination(String keyword, int pageNumber, int pageSize) {

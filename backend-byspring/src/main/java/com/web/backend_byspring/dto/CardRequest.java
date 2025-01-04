@@ -16,4 +16,5 @@ public class CardRequest {
 
     @JsonProperty(value = "customer_id")
     private Long customerId;
+
 }

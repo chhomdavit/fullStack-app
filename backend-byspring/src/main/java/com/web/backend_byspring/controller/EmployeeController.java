@@ -1,12 +1,13 @@
 package com.web.backend_byspring.controller;
 
-import com.web.backend_byspring.dto.ApiResponse;
-import com.web.backend_byspring.dto.EmployeeRequest;
-import com.web.backend_byspring.dto.RefreshTolenRequest;
+import com.web.backend_byspring.constant.AppConstants;
+import com.web.backend_byspring.dto.*;
 import com.web.backend_byspring.service.EmployeeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -36,4 +37,23 @@ public class EmployeeController {
         return new ResponseEntity<>(ApiResponse.successResponse(employeeService.refreshToken(refreshTolenRequest)), HttpStatus.OK);
     }
 
+    @GetMapping("/get-profile")
+    public ResponseEntity<ApiResponseEntity> getMyProfile() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
+        EmployeeRequest employeeRequest = new EmployeeRequest();
+        employeeRequest.setEmail(email);
+        EmployeeRespones employeeRespones = employeeService.getMyInfo(employeeRequest);
+        return new ResponseEntity<>(ApiResponse.successResponse(employeeRespones), HttpStatus.OK);
+    }
+
+    @GetMapping("")
+    public ResponseEntity<PaginationResponse<EmployeeRespones>> getAll(
+            @RequestParam String keyword,
+            @RequestParam(defaultValue = AppConstants.PAGE_NUMBER, required = false) Integer pageNumber,
+            @RequestParam(defaultValue = AppConstants.PAGE_SIZE, required = false) Integer pageSize) {
+
+        PaginationResponse<EmployeeRespones> employeeRespones = employeeService.getAllWithPagination(keyword, pageNumber,pageSize);
+        return ResponseEntity.ok().body(employeeRespones);
+    }
 }

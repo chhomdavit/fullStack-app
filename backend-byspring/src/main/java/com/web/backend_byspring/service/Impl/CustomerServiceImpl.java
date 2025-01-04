@@ -1,13 +1,11 @@
 package com.web.backend_byspring.service.Impl;
 
-import com.web.backend_byspring.dto.CustomerRequest;
-import com.web.backend_byspring.dto.CustomerRespones;
-import com.web.backend_byspring.dto.RefreshTolenRequest;
-import com.web.backend_byspring.dto.ResetPasswordRequest;
+import com.web.backend_byspring.dto.*;
 import com.web.backend_byspring.exception.AlreadyException;
 import com.web.backend_byspring.exception.InvalidException;
 import com.web.backend_byspring.jwt.JWTUtils;
 import com.web.backend_byspring.model.Customer;
+import com.web.backend_byspring.model.Product;
 import com.web.backend_byspring.repository.CustomerRepository;
 import com.web.backend_byspring.service.CustomerService;
 import com.web.backend_byspring.service.handler.CustomerHandlerService;
@@ -18,7 +16,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -167,6 +167,20 @@ public class CustomerServiceImpl implements CustomerService {
                          customerRespones.setAccessToken(newAccessToken);
                          customerRespones.setRefreshToken(newRefreshToken);
 
+        return customerRespones;
+    }
+
+    @Override
+    public List<CustomerRespones> getAll() {
+        List<Customer> customers = customerRepository.findAll();
+        if(customers.isEmpty()) {
+            return List.of();
+        }
+
+        List<CustomerRespones> customerRespones = new ArrayList<>();
+        for(Customer customer : customers) {
+            customerRespones.add(customerHandlerService.convertCustomerToCustomerResponse(customer));
+        }
         return customerRespones;
     }
 
