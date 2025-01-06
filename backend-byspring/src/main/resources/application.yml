@@ -3,9 +3,12 @@ server:
 
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/backend_spring
-    username: postgres
-    password: root
+#    url: jdbc:postgresql://localhost:5432/backend_spring
+#    username: postgres
+#    password: root
+    url: jdbc:postgresql://dpg-cttuh9ggph6c738n6eh0-a.singapore-postgres.render.com:5432/fullstack_app_6a3b
+    username: fullstack_app_6a3b_user
+    password: ix5ZSVLBPX750Osaj14Wy4bf0IS1Yxs3
     driver-class-name: org.postgresql.Driver
 
   jpa:
