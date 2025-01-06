@@ -1,11 +1,11 @@
 server:
-  port: ${SERVER_PORT}
+  port: 8080
 
 spring:
   datasource:
-    url: ${SPRING_DATASOURCE_URL}
-    username: ${SPRING_DATASOURCE_USERNAME}
-    password: ${SPRING_DATASOURCE_PASSWORD}
+    url: jdbc:postgresql://dpg-cttu1i3qf0us73ev0ej0-a.singapore-postgres.render.com:5432/database_fullstackapp
+    username: fullstackapp_user
+    password: m1B0GIMmVWaHVbl0Ckgwlzy8hAneHaQ2
     driver-class-name: org.postgresql.Driver
 
   jpa:
@@ -18,8 +18,8 @@ spring:
   mail:
     host: smtp.gmail.com
     port: 587
-    username: ${SPRING_MAIL_USERNAME}
-    password: ${SPRING_MAIL_PASSWORD}
+    username: xiaoming00009@gmail.com
+    password: xmhrunotdhgbfjbb
     properties:
       mail:
         smtp:
@@ -28,9 +28,12 @@ spring:
             enable: true
 
 project:
-  upload: ${PROJECT_UPLOAD}
+  upload: upload/
 base:
-  url: ${BASE_URL}
+  url: http://localhost:8080
 
 
 
+#    url: jdbc:postgresql://localhost:5432/backend_spring
+#    username: postgres
+#    password: root

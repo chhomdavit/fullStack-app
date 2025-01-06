@@ -64,6 +64,7 @@ com\web\backend_byspring\repository\OrderRepository.class
 com\web\backend_byspring\dto\PaginationResponse.class
 com\web\backend_byspring\dto\EmployeeRespones.class
 com\web\backend_byspring\dto\PaymentResponse$PaymentResponseBuilder.class
+com\web\backend_byspring\config\OwerAdminConfig.class
 com\web\backend_byspring\config\CorsConfig.class
 com\web\backend_byspring\controller\OrderItemController.class
 com\web\backend_byspring\model\BaseEntity.class

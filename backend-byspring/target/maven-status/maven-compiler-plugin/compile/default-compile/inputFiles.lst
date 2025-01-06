@@ -1,5 +1,6 @@
 D:\users-management-system-java-react\fullStack-app\backend-byspring\src\main\java\com\web\backend_byspring\BackendByspringApplication.java
 D:\users-management-system-java-react\fullStack-app\backend-byspring\src\main\java\com\web\backend_byspring\config\CorsConfig.java
+D:\users-management-system-java-react\fullStack-app\backend-byspring\src\main\java\com\web\backend_byspring\config\OwerAdminConfig.java
 D:\users-management-system-java-react\fullStack-app\backend-byspring\src\main\java\com\web\backend_byspring\config\RestTemplateConfig.java
 D:\users-management-system-java-react\fullStack-app\backend-byspring\src\main\java\com\web\backend_byspring\config\SecurityConfig.java
 D:\users-management-system-java-react\fullStack-app\backend-byspring\src\main\java\com\web\backend_byspring\constant\AppConstants.java
