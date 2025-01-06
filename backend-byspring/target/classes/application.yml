@@ -34,6 +34,3 @@ base:
 
 
 
-#    url: jdbc:postgresql://localhost:5432/backend_spring
-#    username: postgres
-#    password: root
